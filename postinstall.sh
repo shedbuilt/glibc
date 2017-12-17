@@ -1,7 +1,4 @@
 #!/bin/bash
-tar xvf $SHED_BINARCH -C /
-mkdir -pv /var/cache/nscd
-mkdir -pv /usr/lib/locale
 localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
 localedef -i de_DE -f ISO-8859-1 de_DE
 localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro
@@ -23,8 +20,9 @@ localedef -i ru_RU -f KOI8-R ru_RU.KOI8-R
 localedef -i ru_RU -f UTF-8 ru_RU.UTF-8
 localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
 localedef -i zh_CN -f GB18030 zh_CN.GB18030
-install -v -Dm644 $SHED_CONTRIBDIR/nsswitch.conf /etc/nsswitch.conf
-install -v -Dm644 $SHED_CONTRIBDIR/ld.so.conf /etc/ld.so.conf
-mkdir -pv /etc/ld.so.conf.d
-# Compatibility symlink for non ld-linux-armhf awareness
-ln -sv ld-2.26.so /lib/ld-linux.so.3
+if [ ! -e /etc/nsswitch.conf ]; then
+    install -v -m644 /etc/nsswitch.default /etc/nsswitch.conf
+fi
+if [ ! -e /etc/ld.so.conf ]; then
+    install -v -m644 /etc/ld.so.default /etc/ld.so.conf
+fi
