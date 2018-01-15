@@ -1,6 +1,4 @@
 #!/bin/bash
-# If /usr/include/limits.h is present when building, make enters an infinite loop in glibc 2.26
-# HACK: For now, temporarily move the installed /usr/include/limits.h aside when compiling
 
 shed_glibc_cleanup ()
 {
@@ -10,9 +8,15 @@ shed_glibc_cleanup ()
     fi
 }
 
+# If /usr/include/limits.h is present when building, make enters an infinite loop in glibc 2.26
+# HACK: For now, temporarily move the installed /usr/include/limits.h aside when compiling
 if [ -e /usr/include/limits.h ]; then
     mv /usr/include/limits.h /usr/include/limits.h.bak
 fi
+
+# Patch
+patch -Np1 -i "${SHED_PATCHDIR}/glibc-2.26-fhs-1.patch"
+patch -Np1 -i "${SHED_PATCHDIR}/glibc-2.26-local_glob_exploits-2.patch"
 
 # Configure
 mkdir -v build
@@ -25,30 +29,28 @@ case "$SHED_BUILDMODE" in
                      --enable-kernel=3.2                \
                      --with-headers=/tools/include      \
                      libc_cv_forced_unwind=yes          \
-                     libc_cv_c_cleanup=yes || ( shed_glibc_cleanup && return 1 )
+                     libc_cv_c_cleanup=yes || { shed_glibc_cleanup; exit 1; }
         ;;
     bootstrap)
         # Avoid references to the temporary /tools directory
         ln -sfv /tools/lib/gcc /usr/lib
         ;&
     *)
-        patch -Np1 -i "${SHED_PATCHDIR}/glibc-2.26-fhs-1.patch"
-        patch -Np1 -i "${SHED_PATCHDIR}/glibc-2.26-local_glob_exploits-2.patch"
         GCC_INCDIR=/usr/lib/gcc/$(gcc -dumpmachine)/7.2.0/include
         CC="gcc -isystem $GCC_INCDIR -isystem /usr/include" \
         ../configure --prefix=/usr                          \
                      --disable-werror                       \
                      --enable-kernel=3.2                    \
                      --enable-stack-protector=strong        \
-                     libc_cv_slibdir=/lib || ( shed_glibc_cleanup && return 1 )
+                     libc_cv_slibdir=/lib || { shed_glibc_cleanup; exit 1; }
         unset GCC_INCDIR
         ;;
 esac
 
 # Build
-make -j $SHED_NUMJOBS || ( shed_glibc_cleanup && return 1 )
+make -j $SHED_NUMJOBS || { shed_glibc_cleanup; exit 1; }
 sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
-make DESTDIR="$SHED_FAKEROOT" install || ( shed_glibc_cleanup && return 1 )
+make DESTDIR="$SHED_FAKEROOT" install || { shed_glibc_cleanup; exit 1; }
 shed_glibc_cleanup
 
 # Install ncsd config files
