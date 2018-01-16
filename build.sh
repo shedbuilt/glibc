@@ -23,13 +23,18 @@ mkdir -v build
 cd build
 case "$SHED_BUILDMODE" in
     toolchain)
-        ../configure --prefix=/tools                    \
-                     --host=$SHED_TOOLCHAIN_TARGET      \
-                     --build=$(../scripts/config.guess) \
-                     --enable-kernel=3.2                \
-                     --with-headers=/tools/include      \
-                     libc_cv_forced_unwind=yes          \
-                     libc_cv_c_cleanup=yes || { shed_glibc_cleanup; exit 1; }
+        if [ "$SHED_HOST" == 'toolchain' ]; then
+            ../configure --prefix=/tools                    \
+                         --host=$SHED_TOOLCHAIN_TARGET      \
+                         --build=$(../scripts/config.guess) \
+                         --enable-kernel=3.2                \
+                         --with-headers=/tools/include      \
+                         libc_cv_forced_unwind=yes          \
+                         libc_cv_c_cleanup=yes || { shed_glibc_cleanup; exit 1; }
+        else
+            echo "Unsupported host setting for toolchain build: '$SHED_HOST'"
+            exit 1
+        fi
         ;;
     bootstrap)
         # Avoid references to the temporary /tools directory
