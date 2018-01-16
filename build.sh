@@ -59,7 +59,11 @@ make DESTDIR="$SHED_FAKEROOT" install || { shed_glibc_cleanup; exit 1; }
 shed_glibc_cleanup
 
 case "$SHED_BUILDMODE" in
-    bootstrap|release)
+    toolchain)
+        # Compatibility symlink for non ld-linux-armhf awareness
+        ln -sv ld-2.26.so "${SHED_FAKEROOT}/tools/lib/ld-linux.so.3"
+        ;;
+    *)
         # Install ncsd config files
         install -v -Dm644 ../nscd/nscd.conf "${SHED_FAKEROOT}/etc/nscd.conf"
         install -v -Dm644 ../nscd/nscd.tmpfiles "${SHED_FAKEROOT}/usr/lib/tmpfiles.d/nscd.conf"
@@ -72,8 +76,7 @@ case "$SHED_BUILDMODE" in
         install -v -m644 "${SHED_CONTRIBDIR}/nsswitch.conf" "${SHED_FAKEROOT}/etc/nsswitch.default"
         install -v -m644 "${SHED_CONTRIBDIR}/ld.so.conf" "${SHED_FAKEROOT}/etc/ld.so.default"
         mkdir -pv "${SHED_FAKEROOT}/etc/ld.so.conf.d"
-        ;&
-    *)
+
         # Compatibility symlink for non ld-linux-armhf awareness
         ln -sv ld-2.26.so "${SHED_FAKEROOT}/lib/ld-linux.so.3"
         ;;
