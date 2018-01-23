@@ -7,9 +7,9 @@ case "$SHED_BUILDMODE" in
     bootstrap)
         # Adjust toolchain following glibc installation in bootstrap
         mv -v /tools/bin/{ld,ld-old}
-        mv -v /tools/$(gcc -dumpmachine)/bin/{ld,ld-old}
+        mv -v /tools/${SHED_NATIVE_TARGET}/bin/{ld,ld-old}
         mv -v /tools/bin/{ld-new,ld}
-        ln -sv /tools/bin/ld /tools/$(gcc -dumpmachine)/bin/ld
+        ln -sv /tools/bin/ld /tools/${SHED_NATIVE_TARGET}/bin/ld
         gcc -dumpspecs | sed -e 's@/tools@@g'                   \
             -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
             -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' >      \

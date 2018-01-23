@@ -41,7 +41,7 @@ case "$SHED_BUILDMODE" in
         ln -sfv /tools/lib/gcc /usr/lib
         ;&
     *)
-        GCC_INCDIR=/usr/lib/gcc/$(gcc -dumpmachine)/7.2.0/include
+        GCC_INCDIR="/usr/lib/gcc/${SHED_NATIVE_TARGET}/7.2.0/include"
         CC="gcc -isystem $GCC_INCDIR -isystem /usr/include" \
         ../configure --prefix=/usr                          \
                      --disable-werror                       \
@@ -79,5 +79,11 @@ case "$SHED_BUILDMODE" in
 
         # Compatibility symlink for non ld-linux-armhf awareness
         ln -sv ld-2.26.so "${SHED_FAKEROOT}/lib/ld-linux.so.3"
+
+        # 64-bit compatibility symlink
+        if [[ $SHED_NATIVE_TARGET =~ ^aarch64-.* ]]; then
+            mkdir -v "${SHED_FAKEROOT}/lib64"
+            ln -sfv ../lib/ld-linux-aarch64.so.1 "${SHED_FAKEROOT}/lib64"
+        fi
         ;;
 esac
