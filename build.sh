@@ -41,7 +41,7 @@ case "$SHED_BUILDMODE" in
         ln -sfv /tools/lib/gcc /usr/lib
         ;&
     *)
-        GCC_INCDIR="/usr/lib/gcc/${SHED_NATIVE_TARGET}/7.2.0/include"
+        GCC_INCDIR="/usr/lib/gcc/${SHED_NATIVE_TARGET}/7.3.0/include"
         CC="gcc -isystem $GCC_INCDIR -isystem /usr/include" \
         ../configure --prefix=/usr                          \
                      --disable-werror                       \
