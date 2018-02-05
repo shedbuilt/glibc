@@ -15,8 +15,7 @@ if [ -e /usr/include/limits.h ]; then
 fi
 
 # Patch
-patch -Np1 -i "${SHED_PATCHDIR}/glibc-2.26-fhs-1.patch"
-patch -Np1 -i "${SHED_PATCHDIR}/glibc-2.26-local_glob_exploits-2.patch"
+patch -Np1 -i "${SHED_PATCHDIR}/glibc-2.27-fhs-1.patch"
 
 # Configure
 mkdir -v build
@@ -39,6 +38,8 @@ case "$SHED_BUILDMODE" in
     bootstrap)
         # Avoid references to the temporary /tools directory
         ln -sfv /tools/lib/gcc /usr/lib
+        # Deal with hard-coded path to m4
+        ln -sfv /tools/bin/m4 /usr/bin
         ;&
     *)
         GCC_INCDIR="/usr/lib/gcc/${SHED_NATIVE_TARGET}/7.3.0/include"
@@ -61,7 +62,7 @@ shed_glibc_cleanup
 case "$SHED_BUILDMODE" in
     toolchain)
         # Compatibility symlink for non ld-linux-armhf awareness
-        ln -sv ld-2.26.so "${SHED_FAKEROOT}/tools/lib/ld-linux.so.3"
+        ln -sv ld-2.27.so "${SHED_FAKEROOT}/tools/lib/ld-linux.so.3"
         ;;
     *)
         # Install ncsd config files
@@ -78,7 +79,7 @@ case "$SHED_BUILDMODE" in
         mkdir -pv "${SHED_FAKEROOT}/etc/ld.so.conf.d"
 
         # Compatibility symlink for non ld-linux-armhf awareness
-        ln -sv ld-2.26.so "${SHED_FAKEROOT}/lib/ld-linux.so.3"
+        ln -sv ld-2.27.so "${SHED_FAKEROOT}/lib/ld-linux.so.3"
 
         # 64-bit compatibility symlink
         if [[ $SHED_NATIVE_TARGET =~ ^aarch64-.* ]]; then

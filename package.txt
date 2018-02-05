@@ -1,5 +1,5 @@
 NAME=glibc
-VERSION=2.26
-REVISION=11
-SRC=http://ftp.gnu.org/gnu/glibc/glibc-2.26.tar.xz
-SRCMD5=102f637c3812f81111f48f2427611be1
+VERSION=2.27
+REVISION=12
+SRC=http://ftp.gnu.org/gnu/glibc/glibc-2.27.tar.xz
+SRCMD5=898cd5656519ffbc3a03fe811dd89e82
