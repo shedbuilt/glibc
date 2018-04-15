@@ -1,5 +1,5 @@
 #!/bin/bash
-case "$SHED_BUILDMODE" in
+case "$SHED_BUILD_MODE" in
     toolchain)
         echo "Error: post-install should not be performed for glibc in toolchain build mode."
         return 1
