@@ -62,7 +62,7 @@ shed_glibc_cleanup
 case "$SHED_BUILD_MODE" in
     toolchain)
         # Compatibility symlink for non ld-linux-armhf awareness
-        ln -sv ld-2.27.so "${SHED_FAKE_ROOT}/tools/lib/ld-linux.so.3"
+        ln -sv ld-${SHED_PKG_VERSION}.so "${SHED_FAKE_ROOT}/tools/lib/ld-linux.so.3"
         ;;
     *)
         # Install ncsd config files
@@ -74,12 +74,13 @@ case "$SHED_BUILD_MODE" in
         mkdir -v "${SHED_FAKE_ROOT}/etc"
 
         # Install other default config files
-        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/nsswitch.conf" "${SHED_FAKE_ROOT}/etc/nsswitch.default"
-        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/ld.so.conf" "${SHED_FAKE_ROOT}/etc/ld.so.default"
+        install -v -dm755 "${SHED_FAKE_ROOT}/usr/share/defaults/etc"
+        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/nsswitch.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc"
+        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/ld.so.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc"
         mkdir -pv "${SHED_FAKE_ROOT}/etc/ld.so.conf.d"
 
         # Compatibility symlink for non ld-linux-armhf awareness
-        ln -sv ld-2.27.so "${SHED_FAKE_ROOT}/lib/ld-linux.so.3"
+        ln -sv ld-${SHED_PKG_VERSION}.so "${SHED_FAKE_ROOT}/lib/ld-linux.so.3"
 
         # 64-bit compatibility symlink
         if [[ $SHED_NATIVE_TARGET =~ ^aarch64-.* ]]; then

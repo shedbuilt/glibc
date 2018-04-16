@@ -38,10 +38,10 @@ case "$SHED_BUILD_MODE" in
         localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
         localedef -i zh_CN -f GB18030 zh_CN.GB18030
         if [ ! -e /etc/nsswitch.conf ]; then
-            install -v -m644 /etc/nsswitch.default /etc/nsswitch.conf
+            ln -sv /usr/share/defaults/etc/nsswitch.conf /etc/nsswitch.conf
         fi
         if [ ! -e /etc/ld.so.conf ]; then
-            install -v -m644 /etc/ld.so.default /etc/ld.so.conf
+            ln -sv /usr/share/defaults/etc/ld.so.default /etc/ld.so.conf
         fi
         ;;
 esac
