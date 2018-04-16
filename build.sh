@@ -15,7 +15,7 @@ if [ -e /usr/include/limits.h ]; then
 fi
 
 # Patch
-patch -Np1 -i "${SHED_PKG_PATCH_DIR}/glibc-2.27-fhs-1.patch"
+patch -Np1 -i "${SHED_PKG_PATCH_DIR}/glibc-2.27-fhs-1.patch" || exit 1
 
 # Configure
 mkdir -v build
@@ -62,30 +62,31 @@ shed_glibc_cleanup
 case "$SHED_BUILD_MODE" in
     toolchain)
         # Compatibility symlink for non ld-linux-armhf awareness
-        ln -sv ld-${SHED_PKG_VERSION}.so "${SHED_FAKE_ROOT}/tools/lib/ld-linux.so.3"
+        ln -sv ld-${SHED_PKG_VERSION}.so "${SHED_FAKE_ROOT}/tools/lib/ld-linux.so.3" || exit 1
         ;;
     *)
         # Install ncsd config files
-        install -v -Dm644 ../nscd/nscd.conf "${SHED_FAKE_ROOT}/etc/nscd.conf"
-        install -v -Dm644 ../nscd/nscd.tmpfiles "${SHED_FAKE_ROOT}/usr/lib/tmpfiles.d/nscd.conf"
-        install -v -Dm644 ../nscd/nscd.service "${SHED_FAKE_ROOT}/lib/systemd/system/nscd.service"
-        mkdir -pv "${SHED_FAKE_ROOT}/var/cache/nscd"
-        mkdir -pv "${SHED_FAKE_ROOT}/usr/lib/locale"
-        mkdir -v "${SHED_FAKE_ROOT}/etc"
+        install -v -Dm644 ../nscd/nscd.conf "${SHED_FAKE_ROOT}/etc/nscd.conf" &&
+        install -v -Dm644 ../nscd/nscd.tmpfiles "${SHED_FAKE_ROOT}/usr/lib/tmpfiles.d/nscd.conf" &&
+        install -v -Dm644 ../nscd/nscd.service "${SHED_FAKE_ROOT}/lib/systemd/system/nscd.service" &&
+        mkdir -pv "${SHED_FAKE_ROOT}/var/cache/nscd" &&
+        mkdir -pv "${SHED_FAKE_ROOT}/usr/lib/locale" &&
+        mkdir -v "${SHED_FAKE_ROOT}/etc" &&
 
         # Install other default config files
-        install -v -dm755 "${SHED_FAKE_ROOT}/usr/share/defaults/etc"
-        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/nsswitch.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc"
-        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/ld.so.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc"
-        mkdir -pv "${SHED_FAKE_ROOT}/etc/ld.so.conf.d"
+        install -v -dm755 "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
+        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/locale.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
+        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/nsswitch.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
+        install -v -m644 "${SHED_PKG_CONTRIB_DIR}/ld.so.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
+        install -v -dm755 "${SHED_FAKE_ROOT}/etc/ld.so.conf.d" &&
 
         # Compatibility symlink for non ld-linux-armhf awareness
-        ln -sv ld-${SHED_PKG_VERSION}.so "${SHED_FAKE_ROOT}/lib/ld-linux.so.3"
+        ln -sv ld-${SHED_PKG_VERSION}.so "${SHED_FAKE_ROOT}/lib/ld-linux.so.3" || exit 1
 
         # 64-bit compatibility symlink
         if [[ $SHED_NATIVE_TARGET =~ ^aarch64-.* ]]; then
-            mkdir -v "${SHED_FAKE_ROOT}/lib64"
-            ln -sfv ../lib/ld-linux-aarch64.so.1 "${SHED_FAKE_ROOT}/lib64"
+            mkdir -v "${SHED_FAKE_ROOT}/lib64" &&
+            ln -sfv ../lib/ld-linux-aarch64.so.1 "${SHED_FAKE_ROOT}/lib64" || exit 1
         fi
         ;;
 esac
