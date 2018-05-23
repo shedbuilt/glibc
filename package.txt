@@ -3,3 +3,5 @@ VERSION=2.27
 REVISION=1
 SRC=http://ftp.gnu.org/gnu/glibc/glibc-2.27.tar.xz
 SRCMD5=898cd5656519ffbc3a03fe811dd89e82
+OPTIONS=toolchain|bootstrap|release
+DEFAULTS=release
