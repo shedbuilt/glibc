@@ -66,7 +66,6 @@ else
     install -v -Dm644 ../nscd/nscd.service "${SHED_FAKE_ROOT}/lib/systemd/system/nscd.service" &&
     mkdir -pv "${SHED_FAKE_ROOT}/var/cache/nscd" &&
     mkdir -pv "${SHED_FAKE_ROOT}/usr/lib/locale" &&
-    mkdir -v "${SHED_FAKE_ROOT}/etc" &&
 
     # Install other default config files
     install -v -dm755 "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
