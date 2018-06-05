@@ -35,12 +35,3 @@ localedef -i ru_RU -f KOI8-R ru_RU.KOI8-R &&
 localedef -i ru_RU -f UTF-8 ru_RU.UTF-8 &&
 localedef -i tr_TR -f UTF-8 tr_TR.UTF-8 &&
 localedef -i zh_CN -f GB18030 zh_CN.GB18030 || exit 1
-if [ ! -e /etc/locale.conf ]; then
-    ln -sfv /usr/share/defaults/etc/locale.conf /etc/locale.conf || exit 1
-fi
-if [ ! -e /etc/nsswitch.conf ]; then
-    ln -sfv /usr/share/defaults/etc/nsswitch.conf /etc/nsswitch.conf || exit 1
-fi
-if [ ! -e /etc/ld.so.conf ]; then
-    ln -sfv /usr/share/defaults/etc/ld.so.default /etc/ld.so.conf || exit 1
-fi

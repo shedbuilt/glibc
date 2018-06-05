@@ -68,11 +68,10 @@ else
     mkdir -pv "${SHED_FAKE_ROOT}/usr/lib/locale" &&
 
     # Install other default config files
-    install -v -dm755 "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
-    install -v -m644 "${SHED_PKG_CONTRIB_DIR}/locale.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
-    install -v -m644 "${SHED_PKG_CONTRIB_DIR}/nsswitch.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
-    install -v -m644 "${SHED_PKG_CONTRIB_DIR}/ld.so.conf" "${SHED_FAKE_ROOT}/usr/share/defaults/etc" &&
-    install -v -dm755 "${SHED_FAKE_ROOT}/etc/ld.so.conf.d" &&
+    install -v -dm755 "${SHED_FAKE_ROOT}${SHED_PKG_DEFAULTS_INSTALL_DIR}/etc" &&
+    install -v -m644 "${SHED_PKG_CONTRIB_DIR}/locale.conf" "${SHED_FAKE_ROOT}${SHED_PKG_DEFAULTS_INSTALL_DIR}/etc" &&
+    install -v -m644 "${SHED_PKG_CONTRIB_DIR}/nsswitch.conf" "${SHED_FAKE_ROOT}${SHED_PKG_DEFAULTS_INSTALL_DIR}/etc" &&
+    install -v -m644 "${SHED_PKG_CONTRIB_DIR}/ld.so.conf" "${SHED_FAKE_ROOT}${SHED_PKG_DEFAULTS_INSTALL_DIR}/etc" &&
 
     # Compatibility symlink for non ld-linux-armhf awareness
     ln -sv ld-${SHED_PKG_VERSION}.so "${SHED_FAKE_ROOT}/lib/ld-linux.so.3" || exit 1
