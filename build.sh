@@ -14,7 +14,7 @@ if [ -e /usr/include/limits.h ]; then
 fi
 
 # Patch
-patch -Np1 -i "${SHED_PKG_PATCH_DIR}/glibc-2.27-fhs-1.patch" || exit 1
+patch -Np1 -i "${SHED_PKG_PATCH_DIR}/glibc-2.28-fhs-1.patch" || exit 1
 
 # Configure
 mkdir -v build
@@ -40,7 +40,7 @@ if [ -n "${SHED_PKG_LOCAL_OPTIONS[toolchain]}" ]; then
     fi
 else
     # HACK: Explicit reference to versioned gcc directory creates a hard dependency
-    GCC_INCDIR="/usr/lib/gcc/${SHED_BUILD_TARGET}/8.1.0/include"
+    GCC_INCDIR="/usr/lib/gcc/${SHED_BUILD_TARGET}/8.2.0/include"
     CC="gcc -isystem $GCC_INCDIR -isystem /usr/include" \
     ../configure --prefix=/usr                          \
                  --disable-werror                       \

@@ -1,7 +1,7 @@
 NAME=glibc
-VERSION=2.27
-REVISION=1
-SRC=http://ftp.gnu.org/gnu/glibc/glibc-2.27.tar.xz
-SRCMD5=898cd5656519ffbc3a03fe811dd89e82
+VERSION=2.28
+REVISION=2
+SRC=http://ftp.gnu.org/gnu/glibc/glibc-2.28.tar.xz
+SRCMD5=c81d2388896379997bc359d4f2084239
 OPTIONS=toolchain|bootstrap|release
 DEFAULTS=release
